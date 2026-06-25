@@ -689,10 +689,10 @@
     const TITLE_ICONS = {
         "Combat Master": "https://mctiers.com/titles/combat_master.webp",
         "Combat Ace": "https://mctiers.com/titles/combat_ace.webp",
-        "Combat Specialist": "https://mctiers.com/titles/combat_specialist.webp",
-        "Combat Novice": "https://mctiers.com/titles/combat_novice.webp",
-        "Rookie": "https://mctiers.com/titles/rookie.webp"
-        // Các title khác sẽ fallback về rookie.svg
+        "Combat Specialist": "https://mctiers.com/titles/rookie.svg",
+        "Combat Novice": "https://mctiers.com/titles/rookie.svg",
+        "Combat Cadet": "https://mctiers.com/titles/rookie.svg",
+        "Rookie": "https://mctiers.com/titles/rookie.svg"
     };
 
     function getTitleIcon(title) {
@@ -700,55 +700,101 @@
     }
 
     // ============================================================
-    // DỮ LIỆU NGƯỜI CHƠI - CHỈ GIỮ ThisReal_Boss
+    // HÀM TỰ ĐỘNG GÁN TITLE DỰA TRÊN ĐIỂM
+    // ============================================================
+    function getTitleByPoints(points) {
+        if (points >= 300) return "Combat Master";
+        if (points >= 200) return "Combat Ace";
+        if (points >= 150) return "Combat Specialist";
+        if (points >= 100) return "Combat Novice";
+        if (points >= 50)  return "Combat Cadet";
+        return "Rookie";
+    }
+
+    // ============================================================
+    // DỮ LIỆU NGƯỜI CHƠI (ĐÃ THÊM MỚI)
     // ============================================================
     const PLAYERS = [
         {
-            ign: "ThisReal_Boss",
+            ign: "RedKing__",
             region: "AS",
-            title: "Combat Ace",
-            points: 60, // HT5 = 60 điểm
-            modes: {
-                sword: "HT5",
-                axe: "",
-                mace: "",
-                pot: "",
-                nethop: "",
-                uhc: "",
-                vanilla: "",
-                smp: ""
-            }
-        }
+            modes: { sword: "LT3", vanilla: "LT4" },
+            points: 0 // sẽ tính tự động
+        },
         {
             ign: "Vdat_crow",
             region: "AS",
-            title: "Combat Ace",
-            points: 60, // HT5 = 60 điểm
-            modes: {
-                sword: "LT3",
-                axe: "",
-                mace: "",
-                pot: "",
-                nethop: "",
-                uhc: "",
-                vanilla: "",
-                smp: ""
-            }
+            modes: { sword: "LT3" },
+            points: 0
+        },
         {
-            ign: "RedKing__",
+            ign: "YoungBoySocSon",
             region: "AS",
-            title: "Combat Ace",
-            points: 60, // HT5 = 60 điểm
-            modes: {
-                sword: "LT3",
-                axe: "",
-                mace: "",
-                pot: "",
-                nethop: "",
-                uhc: "",
-                vanilla: "LT4",
-                smp: ""
-            }
+            modes: { nethop: "HT4" },
+            points: 0
+        },
+        {
+            ign: "Ha4zard",
+            region: "AS",
+            modes: { nethop: "HT4" },
+            points: 0
+        },
+        {
+            ign: "HuuThien_",
+            region: "AS",
+            modes: { vanilla: "HT4", sword: "LT5" },
+            points: 0
+        },
+        {
+            ign: "Horribloment_",
+            region: "AS",
+            modes: { sword: "LT3" },
+            points: 0
+        },
+        {
+            ign: "ThisReal_Boss",
+            region: "AS",
+            modes: { sword: "HT5", mace: "LT5" },
+            points: 0
+        },
+        {
+            ign: "ZHaiiDangg",
+            region: "AS",
+            modes: { vanilla: "LT5", sword: "LT4" },
+            points: 0
+        },
+        {
+            ign: "Tygan_553",
+            region: "AS",
+            modes: { sword: "LT5" },
+            points: 0
+        },
+        {
+            ign: "skeleten2k12",
+            region: "AS",
+            modes: { vanilla: "HT4" },
+            points: 0
+        }
+    ];
+
+    // ============================================================
+    // TÍNH ĐIỂM & GÁN TITLE CHO TỪNG PLAYER
+    // ============================================================
+    function calculatePlayerPoints(player) {
+        let total = 0;
+        for (let modeKey in player.modes) {
+            const rank = player.modes[modeKey] || "";
+            total += RANK_POINTS[rank] || 0;
+        }
+        return total;
+    }
+
+    // Tính điểm và gán title
+    PLAYERS.forEach(p => {
+        p.points = calculatePlayerPoints(p);
+        p.title = getTitleByPoints(p.points);
+    });
+
     // ============================================================
     // HÀM TIỆN ÍCH
     // ============================================================
